@@ -12,16 +12,16 @@ import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import com.bkpasa.stomp.websocket.domain.model.ASimpleMessage;
 import com.bkpasa.stomp.websocket.domain.model.Greeting;
 import com.bkpasa.stomp.websocket.framework.GreetingStompSessionHandler;
 
-@Controller
+@RestController
 @RequestMapping(value = "/rest")
 public class WebSocketController {
 
@@ -38,7 +38,7 @@ public class WebSocketController {
 
     @RequestMapping(value = "/sendUsingStompClient", produces = {
             MediaType.APPLICATION_JSON_VALUE }, method = RequestMethod.GET)
-    public Greeting sendUsingStompClient() throws InterruptedException, ExecutionException {
+    public String sendUsingStompClient() throws InterruptedException, ExecutionException {
         StompSessionHandler sessionHandler = new GreetingStompSessionHandler();
         StompSession session = stompClient.connect(url, sessionHandler).get();
 
@@ -58,7 +58,7 @@ public class WebSocketController {
             });
         }
         session.send("/app/hello", new ASimpleMessage("Mark"));
-        return new Greeting("sendUsingStompClient successful");
+        return "sendUsingStompClient successful";
     }
 
     @RequestMapping(value = "/sendUsingMessageTemplate", produces = {
